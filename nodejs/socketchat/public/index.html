@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Алло | Чат</title>
+</head>
+
+<body>
+    <h1 class="title">Добро пожаловать в чат</h1>
+    <h3 class="username"></h3>
+    <div class="popup">
+        <p>Для начала введите имя. Но вы всегда можете остаться анонимом.</p>
+        <form id="regForm">
+            <input type="text" name="name" id="name" placeholder="Введите имя:">
+            <input type="submit" name="submitName" id="submitName" value="Продолжить">
+        </form>
+        <button id="submitNameAnon">Остаться анонимно</button>
+    </div>
+    <form id="messageForm">
+        Введите сообщение:
+        <input type="text" name="message" id="message">
+        <input type="submit" name="submitMessage" id="submitMessage">
+    </form>
+    <div class="activeUsers">
+        <p>В сети:</p>
+    </div>
+    <div class="messages">
+        <p>Сообщения:</p>
+    </div>
+    <script>
+        const socket = io.connect()
+        const regForm = document.querySelector("#regForm")
+        const activeUsers = document.querySelector(".activeUsers")
+        const messageForm = document.querySelector("#messageForm")
+        const messagesField = document.querySelector(".messages")
+        const usernameField = document.querySelector(".username")
+        const anonBtn = document.querySelector("#submitNameAnon")
+        const popup = document.querySelector(".popup")
+
+        anonBtn.addEventListener("click", function (e) {
+            socket.emit("new user", "Anon")
+            popup.style.display = "none"
+        })
+
+        messageForm.addEventListener("submit", function (e) {
+            e.preventDefault()
+            const message = document.querySelector("#message").value
+            socket.emit('send message', message)
+        })
+
+        regForm.addEventListener("submit", function (e) {
+            e.preventDefault()
+            const name = document.querySelector("#name").value
+            socket.emit("new user", name)
+            popup.style.display = "none"
+        })
+
+
+        socket.on('name is occupied', function () {
+            alert("Указанное имя уже занято.")
+        })
+
+        socket.on('add user', function (username) {
+            activeUsers.innerHTML += `<a>${username}</a><br>`
+            regForm.style.display = "none"
+        })
+
+        socket.on('greeting msg', function (username) {
+            usernameField.innerHTML += `С подключением, ${username}.`
+        })
+
+        socket.on('load users', function (users) {
+            for (let i = 0; i < users.length; i++) {
+                activeUsers.innerHTML += `<a>${users[i].username}</a><br>`
+            }
+        })
+
+        socket.on('update users', function (users) {
+            activeUsers.innerHTML = '<p>В сети:</p>'
+            for (let i = 0; i < users.length; i++) {
+                activeUsers.innerHTML += `<a>${users[i].username}</a><br>`
+            }
+        })
+
+
+        socket.on('load history', function (history) {
+            for (let i = 0; i < history.length; i++) {
+                messagesField.innerHTML += `<div>${history[i].author} пишет: ${history[i].msg}</div>`
+            }
+        })
+
+
+        socket.on('add message', function (message) {
+            messagesField.innerHTML += `<div>${message.author} пишет: ${message.msg}</div>`
+        })
+    </script>
+</body>
+
+</html>
