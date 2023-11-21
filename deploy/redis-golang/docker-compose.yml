@@ -1,0 +1,22 @@
+version: "3"
+services:
+nginx:
+  image: nginx
+  container_name: nginx_for_kt
+  ports:
+    - '7617:80'
+  volumes:
+    - ./templates:/etc/nginx/templates
+  enviroment:
+    - NGINX_PORT=80
+apache:
+  image: httpd:latest
+  container_name: apache_for_kt
+  ports:
+    - '8080:80'
+  volumes:
+    - ./website:/usr/local/apache2/htdocs
+redis:
+  image: redis
+  ports:
+    - '6379:6379'
