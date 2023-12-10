@@ -1,0 +1,45 @@
+{
+    "squadName": "Fantastic Four",
+    "homeTown": "New York City",
+    "formed": 1961,
+    "secretBase": "Baxter Building",
+    "active": true,
+    "members": [
+        {
+            "name": "Mr. Fantastic",
+            "age": 40,
+            "secretIdentity": "Reed Richards",
+            "powers": [
+                "Elasticity",
+                "Genius-level intellect"
+            ]
+        },
+        {
+            "name": "Invisible Woman",
+            "age": 35,
+            "secretIdentity": "Sue Storm",
+            "powers": [
+                "Invisibility",
+                "Force field generation"
+            ]
+        },
+        {
+            "name": "Human Torch",
+            "age": 28,
+            "secretIdentity": "Johnny Storm",
+            "powers": [
+                "Pyrokinesis",
+                "Flight"
+            ]
+        },
+        {
+            "name": "The Thing",
+            "age": 45,
+            "secretIdentity": "Ben Grimm",
+            "powers": [
+                "Superhuman strength",
+                "Rock-like skin"
+            ]
+        }
+    ]
+}
